@@ -1,0 +1,56 @@
+plugins {
+    id 'java'
+    id 'distribution'
+    id 'application'
+}
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+version = '0.1a'
+
+mainClassName = 'no.hornwitser.tachyon.ModLoader'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'sponge'
+        url = 'https://repo.spongepowered.org/maven'
+    }
+}
+
+task unzipExtern(type: Copy) {
+    from zipTree(file('extern/Tachyon a0819.zip'))
+    include 'Tachyon/server/**'
+    
+    into file('build/obf')
+}
+compileJava.dependsOn unzipExtern
+
+
+dependencies {
+    compileOnly files('build/obf/Tachyon/server/TachyonServer.jar')
+
+    // implementation 'org.spongepowered:mixin:0.7.10-SNAPSHOT'
+    implementation files('extern/mixin-0.7.10-NOSERVICE.jar')
+    implementation 'com.google.code.gson:gson:2.2.4'
+    implementation 'commons-io:commons-io:2.4'
+    implementation 'com.google.guava:guava:17.0'
+    // End NOSERVICE.jar dependencies
+
+    implementation 'org.apache.logging.log4j:log4j-core:2.0-beta9'
+}
+
+run {
+    workingDir = file("$buildDir/obf/Tachyon/server")
+    standardInput = System.in
+    ignoreExitValue = true
+}
+
+jar {
+    manifest {
+        /* attributes (
+            // XXX WIP
+            'Class-Path': 'TachyonServer.jar'
+        ) */
+    }
+}

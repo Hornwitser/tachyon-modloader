@@ -1,0 +1,14 @@
+{
+    "required": true,
+    "minVersion": "0.7.10",
+    "package": "no.hornwitser.tachyon.loader",
+    "target": "SERVER",
+    "compatibilityLevel": "JAVA_8",
+    "priority": 1000,
+    "server": [
+        "MixinTest"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

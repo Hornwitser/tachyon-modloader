@@ -1,0 +1,7 @@
+Minimal Viabale Product
+=======================
+
+- [x] Launch Tachyon (Obviously)
+- [ ] Mod Tachyon to load mod files in zips from a mods/ folder
+- [ ] Mod Tachyon jar by overriding class loader
+- [ ] Support Sponge/Mixins mods
