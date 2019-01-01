@@ -5,7 +5,9 @@ Minimal Viabale Product
 - [ ] Mod Tachyon to load mod files in zips from a mods/ folder
   - [x] Load Events
   - [x] Load Dialogues
+  - [ ] Load GenShip
+  - [ ] Load npc/ship names
   - [ ] Load models
-  - [ ] Load names
+  - [ ] Load DataBase on reset/first run?
 - [ ] Mod Tachyon jar by overriding class loader
 - [ ] Support Sponge/Mixins mods

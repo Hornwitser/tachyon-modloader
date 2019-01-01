@@ -9,6 +9,7 @@ targetCompatibility = '1.8'
 version = '0.1a'
 
 mainClassName = 'no.hornwitser.tachyon.ModLoader'
+executableDir = 'server'
 
 repositories {
     mavenCentral()
@@ -48,13 +49,7 @@ run {
     workingDir = file("$buildDir/obf/Tachyon/server")
     standardInput = System.in
     ignoreExitValue = true
-}
-
-jar {
-    manifest {
-        /* attributes (
-            // XXX WIP
-            'Class-Path': 'TachyonServer.jar'
-        ) */
-    }
+    systemProperties([
+        'log4j.configurationFile': 'log4j2-debug.xml',
+    ])
 }
