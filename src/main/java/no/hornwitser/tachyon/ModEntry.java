@@ -292,13 +292,9 @@ public class ModEntry {
 
         String msg;
         if (candidates.isEmpty()) {
-            msg = "Unable to find server dir for ".concat(
-                mod_file.getPath()
-            );
+            msg = "Unable to find server dir";
         } else {
-            msg = "Found multiple server dirs for ".concat(
-                mod_file.getPath()
-            );
+            msg = "Found multiple server dirs";
         }
 
         throw new IOException(msg);

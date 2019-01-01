@@ -34,13 +34,13 @@ public class Service implements IMixinService, IClassProvider, IClassBytecodePro
 
     @Override
     public boolean isValid() {
-        logger.info("isValid");
+        logger.debug("isValid");
         return true; // XXX: ???
     }
 
     @Override
     public void prepare() {
-        logger.info("prepare");
+        logger.debug("prepare");
     }
 
     @Override
@@ -50,21 +50,21 @@ public class Service implements IMixinService, IClassProvider, IClassBytecodePro
 
     @Override
     public void init() {
-        logger.info("init");
+        logger.debug("init");
         // XXX throw new RuntimeException("NotImplemented");
 
     }
 
     @Override
     public void beginPhase() {
-        logger.info("beginPhase");
+        logger.debug("beginPhase");
         // XXX throw new RuntimeException("NotImplemented");
 
     }
 
     @Override
     public void checkEnv(Object bootSource) {
-        logger.info("checkEnv");
+        logger.debug("checkEnv");
         // XXX throw new RuntimeException("NotImplemented");
     }
 
@@ -80,13 +80,13 @@ public class Service implements IMixinService, IClassProvider, IClassBytecodePro
 
     @Override
     public IClassBytecodeProvider getBytecodeProvider() {
-        // logger.info("getBytecodeProvider");
+        // logger.debug("getBytecodeProvider");
         return this;
     }
 
     @Override
     public Collection<String> getPlatformAgents() {
-        logger.info("getPlatformAgents");
+        logger.debug("getPlatformAgents");
         Vector agents = new Vector();
         // agents.add("no.hornwitser.tachyon.mixin.PlatformAgent");
         return agents;
@@ -95,7 +95,7 @@ public class Service implements IMixinService, IClassProvider, IClassBytecodePro
 
     @Override
     public InputStream getResourceAsStream(String name) {
-        logger.info("getResourceAsStream {}", name);
+        logger.debug("getResourceAsStream {}", name);
         return class_loader.getResourceAsStream(name);
         // throw new RuntimeException("NotImplemented");
 
@@ -103,13 +103,13 @@ public class Service implements IMixinService, IClassProvider, IClassBytecodePro
 
     @Override
     public void registerInvalidClass(String className) {
-        logger.info("registerInvalidClass");
+        logger.debug("registerInvalidClass");
 
     }
 
     @Override
     public boolean isClassLoaded(String className) {
-        logger.info("isClassLoaded");
+        logger.debug("isClassLoaded");
         return false;
         // throw new RuntimeException("NotImplemented");
 
@@ -117,20 +117,20 @@ public class Service implements IMixinService, IClassProvider, IClassBytecodePro
 
     @Override
     public String getClassRestrictions(String className) {
-        logger.info("getClassRestrictions");
+        logger.debug("getClassRestrictions");
         return "";
     }
 
     @Override
     public Collection<ITransformer> getTransformers() {
-        logger.info("getTransformers");
+        logger.debug("getTransformers");
         throw new RuntimeException("NotImplemented");
 
     }
 
     @Override
     public String getSideName() {
-        logger.info("getSideName");
+        logger.debug("getSideName");
         return "SERVER"; // TODO Detect side.
     }
 
@@ -138,7 +138,7 @@ public class Service implements IMixinService, IClassProvider, IClassBytecodePro
     // IClassProvider
     @Override
     public URL[] getClassPath() {
-        logger.info("getClassPath");
+        logger.debug("getClassPath");
         for (URL u : class_loader.getURLs()) {
             logger.debug(u.toString());
         }
@@ -156,7 +156,7 @@ public class Service implements IMixinService, IClassProvider, IClassBytecodePro
 
     @Override
     public Class<?> findClass(String name) throws ClassNotFoundException {
-        logger.info("findClass(String)");
+        logger.debug("findClass(String)");
         return class_loader.findClass(name);
     }
 
@@ -164,7 +164,7 @@ public class Service implements IMixinService, IClassProvider, IClassBytecodePro
     public Class<?> findClass(String name, boolean initialize)
         throws ClassNotFoundException
     {
-        logger.info("findClass(String, boolean)");
+        logger.debug("findClass(String, boolean)");
         return Class.forName(name, initialize, class_loader);
     }
 
@@ -172,7 +172,7 @@ public class Service implements IMixinService, IClassProvider, IClassBytecodePro
     public Class<?> findAgentClass(String name, boolean initialize)
         throws ClassNotFoundException
     {
-        logger.info("findAgentClass");
+        logger.debug("findAgentClass");
         throw new RuntimeException("NotImplemented");
 
     }
@@ -182,7 +182,7 @@ public class Service implements IMixinService, IClassProvider, IClassBytecodePro
     public byte[] getClassBytes(String name, String transformedName)
         throws IOException
     {
-        // logger.info("getClassBytes({}, {})", name, transformedName);
+        // logger.debug("getClassBytes({}, {})", name, transformedName);
         String resource = name.replace('.', '/').concat(".class");
         return class_loader.readResourceBytes(resource);
     }
@@ -191,17 +191,17 @@ public class Service implements IMixinService, IClassProvider, IClassBytecodePro
     public byte[] getClassBytes(String name, boolean runTransformers)
         throws ClassNotFoundException, IOException
     {
-        // logger.info("getClassBytes({}, {})", name, runTransformers);
+        // logger.debug("getClassBytes({}, {})", name, runTransformers);
         byte[] bytes = getClassBytes(name, name);
-        
+
         if (runTransformers) {
             // No transformers yet
         }
-        
+
         if (bytes == null) {
             throw new ClassNotFoundException(name);
         }
-        
+
         return bytes;
     }
 
@@ -209,7 +209,7 @@ public class Service implements IMixinService, IClassProvider, IClassBytecodePro
     public ClassNode getClassNode(String name)
         throws ClassNotFoundException, IOException
     {
-        // logger.info("getClassNode");
+        // logger.debug("getClassNode");
         ClassNode class_node = new ClassNode();
         ClassReader class_reader = new ClassReader(getClassBytes(name, true));
         class_reader.accept(class_node, 0);
