@@ -21,10 +21,14 @@ repositories {
 task unzipExtern(type: Copy) {
     from zipTree(file('extern/Tachyon a0819.zip'))
     include 'Tachyon/server/**'
-    
+
     into file('build/obf')
 }
 compileJava.dependsOn unzipExtern
+
+compileJava {
+    options.deprecation = true;
+}
 
 
 dependencies {
