@@ -6,7 +6,9 @@
     "compatibilityLevel": "JAVA_8",
     "priority": 1000,
     "server": [
-        "MixinTest"
+        "MixinServer",
+        "MixinEventParser",
+        "MixinDialogueParser"
     ],
     "injectors": {
         "defaultRequire": 1

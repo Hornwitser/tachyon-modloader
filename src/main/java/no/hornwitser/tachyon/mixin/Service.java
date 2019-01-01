@@ -80,7 +80,7 @@ public class Service implements IMixinService, IClassProvider, IClassBytecodePro
 
     @Override
     public IClassBytecodeProvider getBytecodeProvider() {
-        logger.info("getBytecodeProvider");
+        // logger.info("getBytecodeProvider");
         return this;
     }
 
@@ -139,7 +139,7 @@ public class Service implements IMixinService, IClassProvider, IClassBytecodePro
     @Override
     public URL[] getClassPath() {
         logger.info("getClassPath");
-        for (URL u: class_loader.getURLs()) {
+        for (URL u : class_loader.getURLs()) {
             logger.debug(u.toString());
         }
         return class_loader.getURLs();
@@ -182,7 +182,7 @@ public class Service implements IMixinService, IClassProvider, IClassBytecodePro
     public byte[] getClassBytes(String name, String transformedName)
         throws IOException
     {
-        logger.info("getClassBytes({}, {})", name, transformedName);
+        // logger.info("getClassBytes({}, {})", name, transformedName);
         String resource = name.replace('.', '/').concat(".class");
         return class_loader.readResourceBytes(resource);
     }
@@ -191,7 +191,7 @@ public class Service implements IMixinService, IClassProvider, IClassBytecodePro
     public byte[] getClassBytes(String name, boolean runTransformers)
         throws ClassNotFoundException, IOException
     {
-        logger.info("getClassBytes({}, {})", name, runTransformers);
+        // logger.info("getClassBytes({}, {})", name, runTransformers);
         byte[] bytes = getClassBytes(name, name);
         
         if (runTransformers) {
@@ -209,7 +209,7 @@ public class Service implements IMixinService, IClassProvider, IClassBytecodePro
     public ClassNode getClassNode(String name)
         throws ClassNotFoundException, IOException
     {
-        logger.info("getClassNode");
+        // logger.info("getClassNode");
         ClassNode class_node = new ClassNode();
         ClassReader class_reader = new ClassReader(getClassBytes(name, true));
         class_reader.accept(class_node, 0);
