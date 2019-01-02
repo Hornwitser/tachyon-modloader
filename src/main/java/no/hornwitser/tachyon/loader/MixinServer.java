@@ -44,8 +44,8 @@ public abstract class MixinServer {
         for (ModEntry mod : ModLoader.mods) {
             // logger.debug("Mod {}", mod.getPath());
             for (ModEntry.ModFile file : mod.getEventFiles()) {
-                logger.debug("Parsing {}", file.getModPath());
                 if (!file.isDirectory() && file.getName().endsWith(".xml")) {
+                    logger.debug("Parsing {}", file.getModPath());
                     parser.a(file.new PhantomFile());
                 }
             }

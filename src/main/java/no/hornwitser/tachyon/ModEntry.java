@@ -9,6 +9,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URI;
 import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Vector;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -78,9 +80,12 @@ public class ModEntry {
                     return new File(mod_file, path).isDirectory();
 
                 case ZIP:
-                    ZipEntry entry = zip_file.getEntry(path);
-                    if (entry == null) return false;
-                    return entry.isDirectory();
+                    // ZipEntry entry = zip_file.getEntry(path);
+                    // if (entry == null) return false;
+                    // return entry.isDirectory();
+                    // Doesn't work with zip files that is missing dir entries
+                    return listFiles().length > 0;
+
 
                 default:
                     throw new RuntimeException("Not Implemented");
@@ -95,7 +100,7 @@ public class ModEntry {
                 case ZIP:
                     int start = path.lastIndexOf('/', path.length() - 2) + 1;
                     int end = path.indexOf('/', start);
-                    if (end == -1) end = path.length() - 1;
+                    if (end == -1) end = path.length();
                     return path.substring(start, end);
 
                 default:
@@ -134,6 +139,7 @@ public class ModEntry {
                         return zip_entries.stream().filter(entry -> {
                             String name = entry.getName();
                             String path = ensureDirPath(this.path);
+                            //logger.debug("{} {}", path, name);
 
                             if (!name.startsWith(path))
                                 return false;
@@ -243,6 +249,31 @@ public class ModEntry {
             zip_entries = zip_file.stream().collect(
                 Collectors.toCollection(Vector::new)
             );
+
+            Set<String> zip_dirs = zip_entries.stream().filter(
+                ZipEntry::isDirectory
+            ).map(ZipEntry::getName).collect(
+                Collectors.toCollection(HashSet::new)
+            );
+
+            Set<String> missing_dirs = zip_entries.stream().flatMap(entry -> {
+                String name = entry.getName();
+                Vector<String> nested = new Vector();
+                int pos = -1;
+                while ((pos = name.indexOf('/', pos+1)) != -1) {
+                    nested.add(name.substring(0, pos+1));
+                }
+                return nested.stream();
+            }).collect(
+                Collectors.toCollection(HashSet::new)
+            );
+
+            missing_dirs.removeAll(zip_dirs);
+            for (String dir : missing_dirs) {
+                logger.debug("Adding missing directory {}", dir);
+                zip_entries.add(new ZipEntry(dir));
+            }
+
             type = Type.ZIP;
 
         } else {
@@ -256,13 +287,13 @@ public class ModEntry {
 
     private void scanMod() throws IOException {
         Vector<ModFile> level = new Vector();
-        Vector<ModFile> nextLevel = new Vector();
+        Vector<ModFile> next_level = new Vector();
         Vector<ModFile> candidates = new Vector();
         level.add(this.new ModFile(""));
         // logger.debug("Scanning Mod {}", mod_file.getPath());
 
         while (
-            candidates.isEmpty() && !(level.isEmpty() && nextLevel.isEmpty())
+            candidates.isEmpty() && !(level.isEmpty() && next_level.isEmpty())
         ) {
             for (ModFile dir : level) {
                 for (ModFile entry : dir.listFiles()) {
@@ -273,7 +304,7 @@ public class ModEntry {
                             // logger.info("Adding as candidate");
                             candidates.add(entry);
                         } else {
-                            nextLevel.add(entry);
+                            next_level.add(entry);
                         }
                     }
                 }
@@ -286,8 +317,8 @@ public class ModEntry {
                 return;
             }
 
-            level = nextLevel;
-            nextLevel = new Vector();
+            level = next_level;
+            next_level = new Vector();
         }
 
         String msg;
