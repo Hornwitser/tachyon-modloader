@@ -46,13 +46,18 @@ public class ModEntry {
     public class ModFile {
         private String path;
 
+        private void canonicalize() {
+            path = path.replaceAll("//+", "/");
+        }
+
         ModFile(String path) {
             this.path = path;
+            canonicalize();
         }
 
         ModFile(ModFile parent, String path) {
             this.path = ensureDirPath(parent.path).concat(path);
-
+            canonicalize();
         }
 
         public InputStream openStream() throws IOException {
@@ -86,6 +91,25 @@ public class ModEntry {
                     // Doesn't work with zip files that is missing dir entries
                     return listFiles().length > 0;
 
+
+                default:
+                    throw new RuntimeException("Not Implemented");
+            }
+        }
+
+        public boolean exists() {
+            switch (type) {
+                case DIR:
+                    return new File(mod_file, path).exists();
+
+                case ZIP:
+                        return zip_entries.stream().anyMatch(entry -> {
+                            String name = entry.getName();
+                            if (!path.endsWith("/") && name.endsWith("/")) {
+                                return name.equals(path.concat("/"));
+                            }
+                            return name.equals(path);
+                        });
 
                 default:
                     throw new RuntimeException("Not Implemented");
@@ -178,6 +202,33 @@ public class ModEntry {
                 return ModFile.this.getName();
             }
 
+            @Override
+            public String getAbsolutePath() {
+                return getModPath();
+            }
+
+            @Override
+            public boolean exists() {
+                // logger.debug("PhantomFile.exists {} {}", path, ModFile.this.exists());
+                return ModFile.this.exists();
+            }
+
+            @Override
+            public boolean isDirectory() {
+                return ModFile.this.isDirectory();
+            }
+
+            @Override
+            public File[] listFiles() {
+                ModFile[] files = ModFile.this.listFiles();
+                PhantomFile[] phantoms
+                    = new ModEntry.ModFile.PhantomFile[files.length];
+
+                for (int i=0; i < phantoms.length; i++)
+                    phantoms[i] = files[i].new PhantomFile();
+                return phantoms;
+            }
+
             private RuntimeException ni() {
                 return new RuntimeException("Not Implemneted");
             }
@@ -191,9 +242,7 @@ public class ModEntry {
             @Override public boolean delete() { throw ni(); }
             @Override public void deleteOnExit() { throw ni(); }
             @Override public boolean equals(Object obj) { throw ni(); }
-            @Override public boolean exists() { throw ni(); }
             @Override public File getAbsoluteFile() { throw ni(); }
-            @Override public String getAbsolutePath() { throw ni(); }
             @Override public File getCanonicalFile() { throw ni(); }
             @Override public String getCanonicalPath() { throw ni(); }
             @Override public long getFreeSpace() { throw ni(); }
@@ -204,14 +253,12 @@ public class ModEntry {
             @Override public long getUsableSpace() { throw ni(); }
             @Override public int hashCode() { throw ni(); }
             @Override public boolean isAbsolute() { throw ni(); }
-            @Override public boolean isDirectory() { throw ni(); }
             @Override public boolean isFile() { throw ni(); }
             @Override public boolean isHidden() { throw ni(); }
             @Override public long lastModified() { throw ni(); }
             @Override public long length() { throw ni(); }
             @Override public String[] list() { throw ni(); }
             @Override public String[] list(FilenameFilter f) { throw ni(); }
-            @Override public File[] listFiles() { throw ni(); }
             @Override public File[] listFiles(FileFilter f) { throw ni(); }
             @Override public File[] listFiles(FilenameFilter f) { throw ni(); }
             @Override public boolean mkdir() { throw ni(); }
@@ -336,12 +383,12 @@ public class ModEntry {
         return mod_file.getPath();
     }
 
-    public ModFile[] getEventFiles() {
-        return this.new ModFile(server_dir, "WorldGen/Events").listFiles();
+    public ModFile serverFile(String path) {
+        return this.new ModFile(server_dir, path);
     }
 
-    public ModFile[] getDialogueFiles() {
-        return this.new ModFile(server_dir, "WorldGen/Dialogues").listFiles();
+    public ModFile file(String path) {
+        return this.new ModFile(path);
     }
 }
 
