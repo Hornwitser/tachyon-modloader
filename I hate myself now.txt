@@ -6,7 +6,7 @@ Minimal Viabale Product
   - [x] Load Events
   - [x] Load Dialogues
   - [x] Load GenShip
-  - [ ] Load models
+  - [x] Load models
   - [ ] Load npc/ship names?
   - [ ] Load DataBase on reset/first run?
 - [ ] Mod Tachyon jar by overriding class loader

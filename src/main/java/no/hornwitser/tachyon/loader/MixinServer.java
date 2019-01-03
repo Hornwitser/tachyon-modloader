@@ -119,8 +119,6 @@ public abstract class MixinServer {
     }
 
 
-    // Ugly as frig, but works
-    private static ModEntry.ModFile next_file;
     @Redirect(method = "a(Ljava/lang/String;)Ljava/util/ArrayList;", remap = false, at = @At(
         value = "NEW",
         target = "(Ljava/lang/String;)Ljava/io/FileInputStream;",
@@ -128,20 +126,7 @@ public abstract class MixinServer {
     ))
     private static FileInputStream newFileInputStream(String path)
     throws IOException {
-        int pos = path.lastIndexOf(':');
-        if (pos > 1) {
-            String mod_file = path.substring(0, pos);
-            String file_path = path.substring(pos+1);
-            // logger.debug("Path {} {}", mod_file, file_path);
-
-            next_file = ModLoader.mods.stream().filter(mod ->
-                mod.mod_file.getPath().equals(mod_file)
-            ).findFirst().get().file(file_path);
-
-            return new FileInputStream(new File("icon.png"));
-
-        }
-        return new FileInputStream(path);
+        return Utils.newFileInputStream(path);
     }
 
     @Redirect(method = "a(Ljava/lang/String;)Ljava/util/ArrayList;", remap = false, at = @At(
@@ -151,11 +136,7 @@ public abstract class MixinServer {
     ))
     private static InputStreamReader newInputStreamReader(InputStream stream)
     throws IOException {
-        if (next_file != null) {
-            stream = next_file.openStream();
-            next_file = null;
-        }
-        return new InputStreamReader(stream);
+        return Utils.newInputStreamReader(stream);
     }
 
     @Redirect(method = "a(Ljava/lang/String;)Ljava/util/ArrayList;", remap = false, at = @At(

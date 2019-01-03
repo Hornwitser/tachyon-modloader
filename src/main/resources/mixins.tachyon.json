@@ -8,7 +8,9 @@
     "server": [
         "MixinServer",
         "MixinEventParser",
-        "MixinDialogueParser"
+        "MixinDialogueParser",
+        "MixinModelLoader",
+        "MixinModelParser"
     ],
     "injectors": {
         "defaultRequire": 1

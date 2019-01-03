@@ -2,3 +2,5 @@
 - Exiting with non-zero status on successful shutdown
 - Using System.Console() as condition for showing gui AND IGNORING STDIN
 - Message event target is player if it doesn't case insesitively match NPC
+- Loading models from a constructor
+- Ignoring exceptions duing startup, continuing half initialized
