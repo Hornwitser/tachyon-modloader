@@ -41,7 +41,7 @@ public abstract class MixinServer {
         stream.println(msg + "-modded");
     }
 
-    @Inject(method = "bf", remap = false, at = @At(
+    @Inject(method = "bg()V", remap = false, at = @At(
         value = "INVOKE",
         target = "Ltk/spgames/spaceteamserver/e;a(Ljava/util/HashMap;Ljava/util/HashMap;)Ljava/util/HashMap;",
         ordinal = 0,
@@ -65,7 +65,7 @@ public abstract class MixinServer {
         }
     }
 
-    @Inject(method = "be", remap = false, at = @At(
+    @Inject(method = "bf()V", remap = false, at = @At(
         value = "RETURN",
         remap = false
     ))
@@ -87,7 +87,7 @@ public abstract class MixinServer {
         }
     }
 
-    @Inject(method = "bg()V", remap = false, at = @At(
+    @Inject(method = "bh()V", remap = false, at = @At(
         value = "INVOKE",
         shift = At.Shift.AFTER,
         target = "Ltk/spgames/spaceteamserver/e;b(Ljava/io/File;)V",

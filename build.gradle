@@ -20,7 +20,7 @@ repositories {
 }
 
 task unzipExtern(type: Copy) {
-    from zipTree(file('extern/Tachyon a0819.zip'))
+    from zipTree(file('extern/Tachyon a0820-repack.zip'))
     include 'Tachyon/server/**'
 
     into file('build/obf')
