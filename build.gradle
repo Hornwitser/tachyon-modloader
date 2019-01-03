@@ -6,7 +6,7 @@ plugins {
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
-version = '0.1a'
+version = '0.2a'
 
 mainClassName = 'no.hornwitser.tachyon.ModLoader'
 executableDir = 'server'

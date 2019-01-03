@@ -34,6 +34,7 @@ public class ModLoader {
         for (File entry : mods_dir.listFiles()) {
             try {
                 mods.add(new ModEntry(entry));
+                logger.info("Found {}", entry.getPath());
             } catch (IOException e) {
                 logger.error("Error loading {}", entry.getPath(), e);
             }
