@@ -12,8 +12,8 @@ import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.spongepowered.asm.mixin.Mixins;
 
-import no.hornwitser.tachyon.mixin.Bypass;
-import no.hornwitser.tachyon.mixin.Service;
+import no.hornwitser.tachyon.loader.Bypass;
+import no.hornwitser.tachyon.loader.Service;
 
 
 public class ModLoader {

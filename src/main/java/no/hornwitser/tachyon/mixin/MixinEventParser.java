@@ -1,4 +1,4 @@
-package no.hornwitser.tachyon.loader;
+package no.hornwitser.tachyon.mixin;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,11 +14,11 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import no.hornwitser.tachyon.ModEntry;
 
-import moo.aq;
+import moo.aS;
 
 
-@Mixin(aq.class)
-public abstract class MixinDialogueParser {
+@Mixin(aS.class)
+public abstract class MixinEventParser {
     private static Logger logger = LogManager.getLogger();
 
     @Redirect(method = "a(Ljava/io/File;)V", remap = false, at = @At(

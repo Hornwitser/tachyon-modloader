@@ -1,4 +1,4 @@
-package no.hornwitser.tachyon.loader;
+package no.hornwitser.tachyon.mixin;
 
 import java.io.File;
 import java.io.FileInputStream;
