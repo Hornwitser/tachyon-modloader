@@ -9,7 +9,7 @@ targetCompatibility = '1.8'
 version = '0.2a'
 
 def tachyonDir = 'Tachyon a0821'
-def tachyonZip = "$tachyonDir-pre1.zip"
+def tachyonZip = "$tachyonDir-pre2.zip"
 
 mainClassName = 'no.hornwitser.tachyon.ModLoader'
 executableDir = 'server'
