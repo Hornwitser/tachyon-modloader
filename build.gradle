@@ -8,6 +8,9 @@ sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 version = '0.2a'
 
+def tachyonDir = 'Tachyon a0821'
+def tachyonZip = "$tachyonDir-pre1.zip"
+
 mainClassName = 'no.hornwitser.tachyon.ModLoader'
 executableDir = 'server'
 
@@ -20,8 +23,8 @@ repositories {
 }
 
 task unzipExtern(type: Copy) {
-    from zipTree(file('extern/Tachyon a0820-repack.zip'))
-    include 'Tachyon/server/**'
+    from zipTree(file("extern/${tachyonZip}"))
+    include "${tachyonDir}/server/**"
 
     into file('build/obf')
 }
@@ -33,7 +36,7 @@ compileJava {
 
 
 dependencies {
-    compileOnly files('build/obf/Tachyon/server/TachyonServer.jar')
+    compileOnly files("build/obf/$tachyonDir/server/TachyonServer.jar")
 
     // implementation 'org.spongepowered:mixin:0.7.10-SNAPSHOT'
     implementation files('extern/mixin-0.7.10-NOSERVICE.jar')
@@ -46,7 +49,7 @@ dependencies {
 }
 
 run {
-    workingDir = file("$buildDir/obf/Tachyon/server")
+    workingDir = file("$buildDir/obf/$tachyonDir/server")
     standardInput = System.in
     ignoreExitValue = true
     systemProperties([

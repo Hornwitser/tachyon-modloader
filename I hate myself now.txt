@@ -11,3 +11,11 @@ Minimal Viabale Product
   - [ ] Load DataBase on reset/first run?
 - [ ] Mod Tachyon jar by overriding class loader
 - [ ] Support Sponge/Mixins mods
+
+
+Mods
+====
+
+- [ ] Yetibridge
+- [ ] Check mods on connection
+- [ ] Ingame Mod Browser
