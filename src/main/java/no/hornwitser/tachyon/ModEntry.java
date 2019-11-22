@@ -26,6 +26,7 @@ public class ModEntry {
     public enum Type {
         DIR,
         ZIP,
+        JAR,
     }
 
     private Type type;
@@ -290,46 +291,54 @@ public class ModEntry {
 
         if (path.isDirectory()) {
             type = Type.DIR;
+            scanMod();
 
         } else if (path.getName().endsWith(".zip")) {
-            zip_file = new ZipFile(path);
-            zip_entries = zip_file.stream().collect(
-                Collectors.toCollection(Vector::new)
-            );
-
-            Set<String> zip_dirs = zip_entries.stream().filter(
-                ZipEntry::isDirectory
-            ).map(ZipEntry::getName).collect(
-                Collectors.toCollection(HashSet::new)
-            );
-
-            Set<String> missing_dirs = zip_entries.stream().flatMap(entry -> {
-                String name = entry.getName();
-                Vector<String> nested = new Vector();
-                int pos = -1;
-                while ((pos = name.indexOf('/', pos+1)) != -1) {
-                    nested.add(name.substring(0, pos+1));
-                }
-                return nested.stream();
-            }).collect(
-                Collectors.toCollection(HashSet::new)
-            );
-
-            missing_dirs.removeAll(zip_dirs);
-            for (String dir : missing_dirs) {
-                logger.debug("Adding missing directory {}", dir);
-                zip_entries.add(new ZipEntry(dir));
-            }
-
             type = Type.ZIP;
+            initZip(path);
+            scanMod();
+
+        } else if (path.getName().endsWith(".jar")) {
+            type = Type.JAR;
+            initZip(path);
 
         } else {
             throw new IOException(
                 "Urecognized type for mod ".concat(mod_file.getPath())
             );
         }
+    }
 
-        scanMod();
+    private void initZip(File path) throws IOException {
+        zip_file = new ZipFile(path);
+        zip_entries = zip_file.stream().collect(
+            Collectors.toCollection(Vector::new)
+        );
+
+        Set<String> zip_dirs = zip_entries.stream().filter(
+            ZipEntry::isDirectory
+        ).map(ZipEntry::getName).collect(
+            Collectors.toCollection(HashSet::new)
+        );
+
+        Set<String> missing_dirs = zip_entries.stream().flatMap(entry -> {
+            String name = entry.getName();
+            Vector<String> nested = new Vector();
+            int pos = -1;
+            while ((pos = name.indexOf('/', pos+1)) != -1) {
+                nested.add(name.substring(0, pos+1));
+            }
+            return nested.stream();
+        }).collect(
+            Collectors.toCollection(HashSet::new)
+        );
+
+        missing_dirs.removeAll(zip_dirs);
+        for (String dir : missing_dirs) {
+            logger.debug("Adding missing directory {}", dir);
+            zip_entries.add(new ZipEntry(dir));
+        }
+
     }
 
     private void scanMod() throws IOException {
